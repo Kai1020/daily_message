@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Home — Daily Message{% endblock %}
+{% block content %}
+  <div class="card">
+    <h1>Welcome ❤️</h1>
+    <p class="lead">A soft place for small moments. Tap below to go to the daily note or explore the little interactions.</p>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;margin-top:14px">
+      <a href="/daily"><button class="btn">Daily Message</button></a>
+      <a href="/game"><button class="btn">Play Love Quest</button></a>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Quick Spots</h2>
+    <p class="lead">Jump to anything quickly using the bottom bar — designed for phones.</p>
+  </div>
+{% endblock %}
