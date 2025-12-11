@@ -1,175 +1,157 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Love Quest 💞</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Georgia, serif;
-    background: linear-gradient(135deg, #ffe6ec, #ffedf3);
-    color: #6b3b3b;
-  }
-
-  .wrap {
-    max-width: 700px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-
-  .card {
-    margin-top: 40px;
-    padding: 25px;
-    background: rgba(255,255,255,0.85);
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  }
-
-  h2 {
-    color: #c14b63;
-    margin-bottom: 10px;
-  }
-
-  button {
-    margin-top: 15px;
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    background: #ffd1dc;
-    color: #6b3b3b;
-    width: 95%;
-  }
-
-  button:hover {
-    background: #ffb6c8;
-  }
-</style>
+    <title>Choose Your Cute Story ❤️</title>
+    <style>
+        body {
+            background: #ffe6f2;
+            font-family: 'Poppins';
+            text-align: center;
+            padding: 20px;
+            color: #444;
+        }
+        #storyBox {
+            background: white;
+            width: 80%;
+            margin: auto;
+            padding: 25px;
+            border-radius: 20px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .choice-btn {
+            background: #ff8ac6;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 15px;
+            cursor: pointer;
+            margin: 10px;
+            font-size: 16px;
+        }
+        .choice-btn:hover {
+            opacity: 0.8;
+        }
+    </style>
 </head>
 
 <body>
-<div class="wrap">
 
-  <div class="card" id="storyBox">
-    <h2>Your Love Quest Begins 💞</h2>
-    <p>You find a small glittery envelope on your pillow. It has your name written in soft handwriting…</p>
+<h1>Choose Your Cute Story 💞</h1>
 
-    <button onclick="nextStep(1)">Open the envelope ✉️</button>
-    <button onclick="nextStep(2)">Hold it close and smile 😊</button>
-    <button onclick="nextStep(3)">Shake it to see if something is inside 👀</button>
-  </div>
+<div id="storyBox">
+    <p id="storyText">You wake up in a soft pink world full of sparkles. A tiny glowing heart floats toward you. It whispers, “Your journey begins now.”</p>
 
+    <div id="choices">
+        <button class="choice-btn" onclick="choose('follow')">Follow the glowing heart ✨</button>
+        <button class="choice-btn" onclick="choose('stay')">Stay and explore 🌸</button>
+    </div>
 </div>
 
-
 <script>
-function nextStep(step) {
-  const box = document.getElementById("storyBox");
+function choose(option) {
+    let story = document.getElementById("storyText");
+    let choices = document.getElementById("choices");
 
-  if (step === 1) {
-    box.innerHTML = `
-      <h2>You open the envelope… ✨</h2>
-      <p>Inside is a tiny card with a sweet message:</p>
-      <p><b>“Someone is thinking about you right now.”</b></p>
-      <p>Attached is a tiny map marked with a heart.</p>
+    if (option === "follow") {
+        story.innerHTML = 
+            "You follow the glowing heart through a sparkling forest. Suddenly, a cute cat with angel wings appears and says, “I’ve been waiting for you!”";
 
-      <button onclick="nextStep(4)">Follow the map 🗺️</button>
-      <button onclick="nextStep(5)">Keep the card close to your heart 💖</button>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('pet')">Pet the magical cat 🐱✨</button>
+            <button class="choice-btn" onclick="choose('ask')">Ask why it’s been waiting 🧐</button>
+        `;
+    }
 
-  if (step === 2) {
-    box.innerHTML = `
-      <h2>You smile softly… 😊</h2>
-      <p>The envelope feels warm, like it’s filled with affection.</p>
-      <p>You suddenly feel curious.</p>
+    else if (option === "stay") {
+        story.innerHTML = 
+            "You stay and explore the soft pink world. You find a tiny music box. When you open it, a soft melody plays and a portal appears.";
 
-      <button onclick="nextStep(1)">Open it ✉️</button>
-      <button onclick="nextStep(3)">Shake it 👀</button>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('enter')">Enter the portal 🌈</button>
+            <button class="choice-btn" onclick="choose('close')">Close the box gently 🎁</button>
+        `;
+    }
 
-  if (step === 3) {
-    box.innerHTML = `
-      <h2>It jingles lightly… 🔔</h2>
-      <p>There's something tiny and metallic inside… maybe a charm?</p>
+    else if (option === "pet") {
+        story.innerHTML =
+            "The magical cat purrs happily and gives you a glowing charm. “This will guide you to someone special,” it says with a wink.";
 
-      <button onclick="nextStep(1)">Open it ✉️</button>
-      <button onclick="nextStep(6)">Pocket it for later 😉</button>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('followCharm')">Follow the charm’s light 💫</button>
+        `;
+    }
 
-  if (step === 4) {
-    box.innerHTML = `
-      <h2>You follow the map… 🗺️❤️</h2>
-      <p>It leads to a cozy spot glowing with fairy lights.</p>
-      <p>A note lies there, waiting:</p>
-      <p><b>“If you were here, I’d be smiling.”</b></p>
+    else if (option === "ask") {
+        story.innerHTML =
+            "The cat sits proudly. “I was sent to guide you because you have a warm heart,” it says. “Your kindness lights up worlds.”";
 
-      <button onclick="end(1)">Smile back 😊</button>
-      <button onclick="end(2)">Write a tiny message 💌</button>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('continueForest')">Continue walking with the cat 🌿</button>
+        `;
+    }
 
-  if (step === 5) {
-    box.innerHTML = `
-      <h2>You hold it close… 💖</h2>
-      <p>You feel warm. Safe. Loved.</p>
-      <p>A soft thought crosses your mind…</p>
+    else if (option === "enter") {
+        story.innerHTML =
+            "You step through the portal and land in a sky full of floating islands. A giant heart-shaped cloud floats toward you.";
 
-      <button onclick="end(3)">“I wish he was here.”</button>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('rideCloud')">Ride the heart cloud ☁️💗</button>
+        `;
+    }
 
-  if (step === 6) {
-    box.innerHTML = `
-      <h2>You pocket it playfully… 😉</h2>
-      <p>Mysterious… but you still feel someone thinking of you warmly.</p>
+    else if (option === "close") {
+        story.innerHTML =
+            "You close the box gently. Suddenly, flowers bloom everywhere around you. The world whispers, “Thank you for your kindness.”";
 
-      <button onclick="end(4)">Turn around slowly 👀❤️</button>
-    `;
-  }
-}
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('flowerPath')">Follow the flower path 🌼</button>
+        `;
+    }
 
-function end(type) {
-  const box = document.getElementById("storyBox");
+    else if (option === "followCharm") {
+        story.innerHTML =
+            "The charm leads you to a glowing lake. Your reflection smiles and says, “You are loved more than you know.”";
 
-  if (type === 1) {
-    box.innerHTML = `
-      <h2>You smile… and the air softens. 💞</h2>
-      <p>A warm breeze whispers:</p>
-      <p><b>“He feels the same way.”</b></p>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('end')">Smile back 😊</button>
+        `;
+    }
 
-  if (type === 2) {
-    box.innerHTML = `
-      <h2>You write something sweet… ✍️💖</h2>
-      <p>The note glows warmly.</p>
-      <p><b>“He’ll love reading that.”</b></p>
-    `;
-  }
+    else if (option === "continueForest") {
+        story.innerHTML =
+            "You and the cat walk together. Fireflies light your path. One lands on your hand and forms a tiny heart.";
 
-  if (type === 3) {
-    box.innerHTML = `
-      <h2>You whisper it softly… 💭❤️</h2>
-      <p>The envelope warms in your hand.</p>
-      <p><b>“He wishes the same.”</b></p>
-    `;
-  }
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('end')">Make a wish 💖</button>
+        `;
+    }
 
-  if (type === 4) {
-    box.innerHTML = `
-      <h2>You turn slowly… 👀❤️</h2>
-      <p>And imagine him smiling softly at you.</p>
-      <p><b>“I’ve been waiting to see that smile.”</b></p>
-    `;
-  }
+    else if (option === "rideCloud") {
+        story.innerHTML =
+            "The cloud lifts you gently. From above, you see stars forming your name. One star falls into your hand — warm and soft.";
+
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('end')">Keep the star ⭐</button>
+        `;
+    }
+
+    else if (option === "flowerPath") {
+        story.innerHTML =
+            "The flower path leads you to a cozy little cottage with heart-shaped windows. Inside, a warm light welcomes you.";
+
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="choose('end')">Enter the cottage 🏡💗</button>
+        `;
+    }
+
+    else if (option === "end") {
+        story.innerHTML =
+            "The world glows brighter around you. A gentle voice whispers: “You are cherished, appreciated, and deeply loved.” 💖<br><br>Thank you for playing, beautiful soul 🌸";
+
+        choices.innerHTML = `
+            <button class="choice-btn" onclick="location.href='/'">Return Home 🏠</button>
+        `;
+    }
 }
 </script>
 
