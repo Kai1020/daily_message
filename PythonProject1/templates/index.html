@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Daily Message ❤️</title>
+
+    <style>
+        body {
+            margin: 0;
+            font-family: "Georgia", serif;
+            background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(8px);
+            padding: 40px;
+            width: 350px;
+            text-align: center;
+            border-radius: 25px;
+            box-shadow: 0 0 25px rgba(255, 182, 193, 0.5);
+            animation: fadeIn 1.5s ease;
+        }
+
+        .card p {
+            font-size: 22px;
+            color: #4a2c2c;
+            line-height: 1.5;
+        }
+
+        .footer {
+            font-size: 12px;
+            margin-top: 20px;
+            color: #5a3b3b;
+        }
+
+        .heart {
+            position: absolute;
+            color: rgba(255, 0, 0, 0.3);
+            font-size: 25px;
+            animation: floatUp 5s infinite ease-in;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
+            100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+
+<body>
+    <script>
+        function createHeart() {
+            const heart = document.createElement("div");
+            heart.classList.add("heart");
+            heart.innerHTML = "❤";
+            heart.style.left = Math.random() * 100 + "vw";
+            heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
+            document.body.appendChild(heart);
+
+            setTimeout(() => {
+                heart.remove();
+            }, 6000);
+        }
+        setInterval(createHeart, 400);
+    </script>
+
+    <div class="card">
+        <p>{{ message }}</p>
+        <div class="footer">A new message awaits you every day ✨</div>
+    </div>
+</body>
+</html>
