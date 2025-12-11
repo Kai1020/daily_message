@@ -5,8 +5,8 @@ from datetime import date
 app = Flask(__name__)
 
 # ------------ CONFIG (REPLACE) ------------
-TELEGRAM_TOKEN = "YOUR_TELEGRAM_BOT_TOKEN"
-CHAT_ID = "YOUR_CHAT_ID"
+TELEGRAM_TOKEN = "8541424045:AAGJz5sMje4EjyHzDLR_AFgAE7hwfsd8BQo"
+CHAT_ID = "6942307057"
 # -------------------------------------------
 
 def send_telegram(text):
@@ -76,3 +76,4 @@ def meter_update():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
+
