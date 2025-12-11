@@ -1,132 +1,102 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Your Daily Message 💖</title>
-
-<style>
-  body {
-    margin: 0;
-    font-family: Georgia, serif;
-    background: linear-gradient(135deg, #ffe6ec, #ffedf3);
-    color: #6b3b3b;
-  }
-  .wrap { max-width: 700px; margin: auto; padding: 20px; }
-  .card {
-    background: rgba(255,255,255,0.85);
-    padding: 25px;
-    margin-top: 30px;
-    border-radius: 18px;
-    text-align: center;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
-  }
-  button {
-    padding: 12px 20px;
-    border-radius: 12px;
-    border: none;
-    background: #c14b63;
-    color: white;
-    cursor: pointer;
-    margin-top: 15px;
-    width: 90%;
-    font-size: 16px;
-  }
-  .pickCard {
-    display: inline-block;
-    background: #ffd1dc;
-    padding: 20px;
-    width: 80px;
-    margin: 10px;
-    border-radius: 15px;
-    cursor: pointer;
-  }
-</style>
+    <title>Your Daily Message 💖</title>
+    <style>
+        body { background: #ffe6ee; font-family: 'Poppins'; text-align: center; padding: 20px; }
+        .box { background: white; padding: 30px; border-radius: 20px; width: 80%; margin: auto; box-shadow: 0 0 15px rgba(0,0,0,0.1); }
+        .card { display: inline-block; padding: 20px; margin: 10px; background:#ffd6e7; border-radius: 15px; cursor: pointer; }
+        button { padding: 10px 25px; border: none; background: hotpink; color: white; border-radius: 15px; cursor: pointer; }
+        input, textarea { width: 80%; padding: 10px; border-radius: 10px; border: 1px solid pink; margin: 10px 0; }
+    </style>
 </head>
-
 <body>
-<div class="wrap">
 
-  <!-- Daily message -->
-  <div class="card">
+<div class="box">
     <h2>A little something for you ✨</h2>
     <p>{{ message }}</p>
-  </div>
+</div>
 
-  <!-- Game button -->
-  <div class="card">
-    <h2>Play a cute story game 💞</h2>
-    <a href="/game">
-      <button>Start Love Quest 💗</button>
-    </a>
-  </div>
+<br>
 
-  <!-- Pick a card -->
-  <div class="card">
+<div class="box">
     <h2>Pick a card 💌</h2>
-    <p id="cardOutput">One of these cards hides a sweet message.</p>
-
-    <div class="pickCard" data-msg="You're adorable. 💖">Pick</div>
-    <div class="pickCard" data-msg="I’m lucky to have you. 🌸">Pick</div>
-    <div class="pickCard" data-msg="You make my world sweeter. 🍯">Pick</div>
-  </div>
-
-  <!-- Love Meter -->
-  <div class="card">
-    <h2>Love Meter 💘</h2>
-    <p id="loveText">Slide to show how much you love me 🥺</p>
-
-    <input type="range" id="loveSlider" value="50" min="0" max="100" style="width: 100%;">
-  </div>
-
-  <!-- Message Back -->
-  <div class="card">
-    <h2>Write a message back to me 💞</h2>
-
-    <form action="/submit_message" method="POST">
-      <input name="name" placeholder="Your name (optional)" style="width: 95%; padding: 10px; border-radius: 10px;"><br><br>
-      <textarea name="message" placeholder="Write something sweet..." style="width:95%; height:100px; border-radius:10px;"></textarea>
-      <br>
-      <button type="submit">Send 💖</button>
-    </form>
-  </div>
-
+    <div class="card" data-msg="You make everything brighter.">Pick</div>
+    <div class="card" data-msg="You're adorable.">Pick</div>
+    <div class="card" data-msg="I love your smile.">Pick</div>
+    <p id="cardOutput"></p>
 </div>
 
 <script>
-// Pick-a-card
-const cards = document.querySelectorAll(".pickCard");
-const cardOutput = document.getElementById("cardOutput");
-
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-    cardOutput.textContent = card.getAttribute("data-msg");
-  });
-});
-
-// Love meter
-const slider = document.getElementById("loveSlider");
-const loveText = document.getElementById("loveText");
-
-slider.addEventListener("input", () => {
-  const val = slider.value;
-  let mood = "😍 Overflowing love";
-
-  if (val < 20) mood = "😢 Missing you";
-  else if (val < 40) mood = "🤗 I need a hug";
-  else if (val < 60) mood = "☺️ Feeling warm";
-  else if (val < 80) mood = "😊 Loved";
-
-  loveText.textContent = `${val}% • ${mood}`;
-
-  // send mood to server
-  fetch("/meter_update", {
-    method: "POST",
-    headers: { "Content-Type": "application/x-www-form-urlencoded" },
-    body: `value=${val}&mood=${encodeURIComponent(mood)}`
-  });
+document.querySelectorAll(".card").forEach(card => {
+    card.onclick = () => {
+        document.getElementById("cardOutput").textContent = card.getAttribute("data-msg");
+    };
 });
 </script>
+
+<br>
+
+<div class="box">
+    <h2>Love Meter 💗</h2>
+    <input type="range" id="loveSlider" min="0" max="100" value="50">
+    <p id="loveText">50% • Loved 😊</p>
+</div>
+
+<script>
+const slide = document.getElementById("loveSlider");
+const loveText = document.getElementById("loveText");
+
+slide.addEventListener("input", () => {
+    let v = slide.value;
+    let mood = "Overflowing with love 😍";
+
+    if (v < 20) mood = "Missing you 🥺";
+    else if (v < 40) mood = "I need a hug 🤗";
+    else if (v < 60) mood = "Feeling warm 🥰";
+    else if (v < 80) mood = "Loved 😊";
+
+    loveText.textContent = `${v}% • ${mood}`;
+
+    fetch("/meter_update", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ value: v, mood: mood })
+    });
+});
+</script>
+
+<br>
+
+<div class="box">
+    <h2>Write a message back to me 💕</h2>
+
+    <form id="msgForm">
+        <input name="name" placeholder="Your name">
+        <textarea name="message" placeholder="Write something sweet..." rows="4"></textarea>
+        <button>Send 💌</button>
+    </form>
+</div>
+
+<script>
+document.getElementById("msgForm").addEventListener("submit", function(e){
+    e.preventDefault();
+
+    fetch("/send_message", {
+        method: "POST",
+        body: new FormData(this)
+    }).then(() => {
+        alert("Your message was sent ❤️");
+        this.reset();
+    });
+});
+</script>
+
+<br><br>
+
+<a href="/game">
+<button style="background: purple;">Play Cute Game 🎮</button>
+</a>
 
 </body>
 </html>
