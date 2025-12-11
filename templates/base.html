@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{% block title %}Daily Message{% endblock %}</title>
+  <style>
+    :root{
+      --bg1:#fff6f8;
+      --accent:#c85a78;
+      --muted:#6b3b3b;
+      --card: rgba(255,255,255,0.9);
+      --glass: rgba(255,255,255,0.6);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0;font-family:Inter, "Segoe UI", system-ui, Georgia, serif;background:linear-gradient(160deg,var(--bg1),#fff0f3);color:var(--muted);-webkit-font-smoothing:antialiased}
+    .container{max-width:720px;margin:0 auto;padding:20px;padding-bottom:84px;} /* leave space for bottom nav */
+    .card{background:var(--card);border-radius:16px;padding:20px;box-shadow:0 8px 24px rgba(200,80,120,0.08);margin:18px 0;transition:transform .35s ease,opacity .35s ease;opacity:0;transform:translateY(10px)}
+    .card.visible{opacity:1;transform:translateY(0)}
+    h1,h2{margin:0 0 10px 0;color:var(--accent)}
+    p.lead{margin:0 0 10px 0;font-size:15px;color: #7a4a4a}
+    button.btn{background:linear-gradient(90deg,#ff9fb1,#ffd1d8);border:none;padding:12px 18px;border-radius:999px;font-weight:700;color:#4a1222;cursor:pointer;box-shadow:0 8px 18px rgba(200,80,120,0.08)}
+    /* bottom nav */
+    .bottom-nav{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;background:var(--glass);backdrop-filter:blur(6px);padding:10px 14px;border-radius:999px;display:flex;gap:18px;box-shadow:0 10px 30px rgba(120,40,80,0.08)}
+    .nav-btn{background:transparent;border:none;padding:8px 10px;border-radius:12px;color:#6b3b3b;font-weight:700;cursor:pointer;display:flex;flex-direction:column;align-items:center;font-size:13px}
+    .nav-btn.active{background:linear-gradient(90deg,#ffdbe4,#fff);box-shadow:0 6px 18px rgba(200,80,120,0.06)}
+    .icon{font-size:18px;margin-bottom:4px}
+    /* responsive tweaks */
+    @media(min-width:880px){
+      .container{padding:40px}
+      .bottom-nav{bottom:26px}
+    }
+  </style>
+  {% block head %}{% endblock %}
+</head>
+<body>
+  <div class="container" id="app">
+    {% block content %}{% endblock %}
+  </div>
+
+  <nav class="bottom-nav" role="navigation" aria-label="Main">
+    <form action="/" method="get"><button class="nav-btn {% if request.path=='/' %}active{% endif %}"><div class="icon">🏠</div>Home</button></form>
+    <form action="/daily" method="get"><button class="nav-btn {% if request.path=='/daily' %}active{% endif %}"><div class="icon">💌</div>Daily</button></form>
+    <form action="/cards" method="get"><button class="nav-btn {% if request.path=='/cards' %}active{% endif %}"><div class="icon">🃏</div>Cards</button></form>
+    <form action="/meter" method="get"><button class="nav-btn {% if request.path=='/meter' %}active{% endif %}"><div class="icon">💗</div>Meter</button></form>
+    <form action="/message" method="get"><button class="nav-btn {% if request.path=='/message' %}active{% endif %}"><div class="icon">✉️</div>Message</button></form>
+  </nav>
+
+<script>
+  // small helper: reveal cards as they load
+  document.addEventListener("DOMContentLoaded", () => {
+    const cs = document.querySelectorAll(".card");
+    cs.forEach((c,i) => setTimeout(()=>c.classList.add("visible"), 80*i));
+  });
+</script>
+{% block scripts %}{% endblock %}
+</body>
+</html>
