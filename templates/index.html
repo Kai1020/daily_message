@@ -1,82 +1,204 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Your Daily Message ❤️</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Your Daily Message ❤️</title>
 
-    <style>
-        body {
-            margin: 0;
-            font-family: "Georgia", serif;
-            background: linear-gradient(to bottom right, #ffdde1, #ee9ca7);
-            height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            overflow: hidden;
-        }
+<style>
+  body {
+    margin: 0;
+    font-family: Georgia, serif;
+    background: linear-gradient(135deg, #ffedf0, #ffe6ec);
+    color: #6b3b3b;
+  }
 
-        .card {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(8px);
-            padding: 40px;
-            width: 350px;
-            text-align: center;
-            border-radius: 25px;
-            box-shadow: 0 0 25px rgba(255, 182, 193, 0.5);
-            animation: fadeIn 1.5s ease;
-        }
+  .wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 20px;
+  }
 
-        .card p {
-            font-size: 22px;
-            color: #4a2c2c;
-            line-height: 1.5;
-        }
+  .card {
+    background: rgba(255,255,255,0.8);
+    padding: 20px;
+    border-radius: 18px;
+    box-shadow: 0 5px 18px rgba(193,75,99,0.15);
+    margin-top: 30px;
+    text-align: center;
+  }
 
-        .footer {
-            font-size: 12px;
-            margin-top: 20px;
-            color: #5a3b3b;
-        }
-
-        .heart {
-            position: absolute;
-            color: rgba(255, 0, 0, 0.3);
-            font-size: 25px;
-            animation: floatUp 5s infinite ease-in;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0.8; }
-            100% { transform: translateY(-800px) rotate(360deg); opacity: 0; }
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-    </style>
+  h1 {
+    margin: 0;
+    color: #c14b63;
+    font-size: 20px;
+  }
+</style>
 </head>
 
 <body>
-    <script>
-        function createHeart() {
-            const heart = document.createElement("div");
-            heart.classList.add("heart");
-            heart.innerHTML = "❤";
-            heart.style.left = Math.random() * 100 + "vw";
-            heart.style.animationDuration = (Math.random() * 3 + 3) + "s";
-            document.body.appendChild(heart);
+  <div class="wrap">
 
-            setTimeout(() => {
-                heart.remove();
-            }, 6000);
-        }
-        setInterval(createHeart, 400);
-    </script>
-
+    <!-- SECTION 1: Reveal message -->
     <div class="card">
-        <p>{{ message }}</p>
-        <div class="footer">A new message awaits you every day ✨</div>
+      <h1>A little something for you ✨</h1>
+      <p>Tap the button to reveal today's message.</p>
+
+      <button id="revealBtn"
+        style="
+          background: linear-gradient(90deg,#ff9fb1,#ffd1d8);
+          border:none;
+          padding:12px 16px;
+          font-weight:600;
+          border-radius:999px;
+          cursor:pointer;
+        ">
+        Reveal ❤️
+      </button>
+
+      <div id="dailyMessage" style="margin-top:15px; font-size:20px; display:none;">
+        {{ message }}
+      </div>
     </div>
+<script>
+  // Reveal button logic
+  const revealBtn = document.getElementById("revealBtn");
+  const dailyMessage = document.getElementById("dailyMessage");
+
+  revealBtn.addEventListener("click", () => {
+    dailyMessage.style.display = "block";
+    revealBtn.style.display = "none";
+  });
+
+  // Floating hearts on tap/click
+  document.addEventListener("click", function(e) {
+    // Create a heart element
+    let heart = document.createElement("div");
+    heart.textContent = "❤️";
+    heart.style.position = "fixed";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = "20px";
+    heart.style.opacity = 1;
+    heart.style.transition = "all 1.4s ease-out";
+
+    document.body.appendChild(heart);
+
+    // Animate upward and fade
+    setTimeout(() => {
+      heart.style.top = (e.clientY - 80) + "px";
+      heart.style.opacity = 0;
+    }, 10);
+
+    // Remove after animation
+    setTimeout(() => {
+      heart.remove();
+    }, 1500);
+  });
+</script>
+    <!-- SECTION 2: Pick-a-card game -->
+    <div class="card">
+      <h1>Pick a card 💌</h1>
+      <p>One of these cards hides a sweet message.</p>
+
+      <div style="display:flex; justify-content:center; gap:15px; margin-top:15px;">
+        <div class="pickCard" data-msg="You are the best thing in my world. ❤️"
+          style="width:90px; height:120px; background:#ffe6ec; border-radius:12px;
+          display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          Pick
+        </div>
+
+        <div class="pickCard" data-msg="Every moment with you feels special. 💕"
+          style="width:90px; height:120px; background:#ffe6ec; border-radius:12px;
+          display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          Pick
+        </div>
+
+        <div class="pickCard" data-msg="I love the way you make me smile. ✨"
+          style="width:90px; height:120px; background:#ffe6ec; border-radius:12px;
+          display:flex; align-items:center; justify-content:center; cursor:pointer;">
+          Pick
+        </div>
+      </div>
+
+      <div id="cardOutput" style="margin-top:15px; font-weight:bold;"></div>
+    </div>
+// Pick-a-card logic
+const cards = document.querySelectorAll(".pickCard");
+const cardOutput = document.getElementById("cardOutput");
+
+cards.forEach(card => {
+  card.addEventListener("click", () => {
+    const msg = card.getAttribute("data-msg");
+    cardOutput.textContent = msg;
+  });
+});
+    <!-- SECTION 3: Love Meter -->
+    <div class="card">
+      <h1>Love Meter 💖</h1>
+      <p>Slide to show how much you love me 😳</p>
+
+      <input type="range" id="loveSlider" min="0" max="100" value="70"
+        style="width:80%; margin-top:15px;">
+
+      <div id="loveText" style="margin-top:10px; font-size:18px; font-weight:bold;">
+        70% • I feel loved 😌
+      </div>
+    </div>
+// Love Meter logic
+const slider = document.getElementById("loveSlider");
+const loveText = document.getElementById("loveText");
+
+slider.addEventListener("input", () => {
+  const val = slider.value;
+
+  let mood = "😍 Overflowing love";
+  if (val < 20) mood = "😢 Missing you";
+  else if (val < 40) mood = "🥺 I need a hug";
+  else if (val < 60) mood = "☺️ Feeling warm";
+  else if (val < 80) mood = "😊 Loved";
+  else mood = "😍 Overflowing love";
+
+  loveText.textContent = `${val}% • ${mood}`;
+});
+    <!-- SECTION 4: Write a message back to me -->
+    <div class="card">
+      <h1>Write a message back to me 💌</h1>
+      <p>Whatever you write here will be saved privately on the server.</p>
+
+      <form action="/submit_message" method="POST" style="margin-top:15px;">
+        <input
+          type="text"
+          name="name"
+          placeholder="Your name (optional)"
+          style="width:90%; padding:10px; border-radius:10px; border:1px solid #d8b3b3;"
+        >
+
+        <textarea
+          name="text"
+          rows="3"
+          placeholder="Write something sweet..."
+          required
+          style="width:90%; padding:10px; border-radius:10px; border:1px solid #d8b3b3; margin-top:10px;"
+        ></textarea>
+
+        <button
+          type="submit"
+          style="
+            background:#c14b63;
+            color:white;
+            border:none;
+            padding:10px 20px;
+            font-weight:bold;
+            border-radius:12px;
+            cursor:pointer;
+            margin-top:10px;
+          "
+        >
+          Send ❤️
+        </button>
+      </form>
+    </div>
+  </div> <!-- wrap -->
 </body>
 </html>
