@@ -1,159 +1,240 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Choose Your Cute Story ❤️</title>
-    <style>
-        body {
-            background: #ffe6f2;
-            font-family: 'Poppins';
-            text-align: center;
-            padding: 20px;
-            color: #444;
-        }
-        #storyBox {
-            background: white;
-            width: 80%;
-            margin: auto;
-            padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.1);
-        }
-        .choice-btn {
-            background: #ff8ac6;
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 15px;
-            cursor: pointer;
-            margin: 10px;
-            font-size: 16px;
-        }
-        .choice-btn:hover {
-            opacity: 0.8;
-        }
-    </style>
-</head>
+{% extends "base.html" %}
+{% block title %}Love Story Mode{% endblock %}
 
-<body>
+{% block content %}
 
-<h1>Choose Your Cute Story 💞</h1>
+<div class="card" id="storyBox" style="transition: .5s;">
+    <h2 id="titleText"></h2>
+    <p id="storyText"></p>
 
-<div id="storyBox">
-    <p id="storyText">You wake up in a soft pink world full of sparkles. A tiny glowing heart floats toward you. It whispers, “Your journey begins now.”</p>
+    <div id="choices" style="margin-top:16px; display:flex; flex-direction:column; gap:10px;"></div>
 
-    <div id="choices">
-        <button class="choice-btn" onclick="choose('follow')">Follow the glowing heart ✨</button>
-        <button class="choice-btn" onclick="choose('stay')">Stay and explore 🌸</button>
+    <div style="margin-top:20px; display:flex; gap:10px;">
+        <button class="btn" onclick="saveGame()">Save Game 💾</button>
+        <button class="btn" onclick="restartGame()">Restart 🔄</button>
     </div>
 </div>
 
+{% endblock %}
+
+{% block scripts %}
 <script>
-function choose(option) {
-    let story = document.getElementById("storyText");
-    let choices = document.getElementById("choices");
 
-    if (option === "follow") {
-        story.innerHTML = 
-            "You follow the glowing heart through a sparkling forest. Suddenly, a cute cat with angel wings appears and says, “I’ve been waiting for you!”";
+// -------------------------------
+// SAVE / LOAD SYSTEM
+// -------------------------------
 
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('pet')">Pet the magical cat 🐱✨</button>
-            <button class="choice-btn" onclick="choose('ask')">Ask why it’s been waiting 🧐</button>
-        `;
-    }
+function saveGame() {
+    localStorage.setItem("shahad_story_progress", currentStep);
+    alert("Game Saved! 💗");
+}
 
-    else if (option === "stay") {
-        story.innerHTML = 
-            "You stay and explore the soft pink world. You find a tiny music box. When you open it, a soft melody plays and a portal appears.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('enter')">Enter the portal 🌈</button>
-            <button class="choice-btn" onclick="choose('close')">Close the box gently 🎁</button>
-        `;
-    }
-
-    else if (option === "pet") {
-        story.innerHTML =
-            "The magical cat purrs happily and gives you a glowing charm. “This will guide you to someone special,” it says with a wink.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('followCharm')">Follow the charm’s light 💫</button>
-        `;
-    }
-
-    else if (option === "ask") {
-        story.innerHTML =
-            "The cat sits proudly. “I was sent to guide you because you have a warm heart,” it says. “Your kindness lights up worlds.”";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('continueForest')">Continue walking with the cat 🌿</button>
-        `;
-    }
-
-    else if (option === "enter") {
-        story.innerHTML =
-            "You step through the portal and land in a sky full of floating islands. A giant heart-shaped cloud floats toward you.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('rideCloud')">Ride the heart cloud ☁️💗</button>
-        `;
-    }
-
-    else if (option === "close") {
-        story.innerHTML =
-            "You close the box gently. Suddenly, flowers bloom everywhere around you. The world whispers, “Thank you for your kindness.”";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('flowerPath')">Follow the flower path 🌼</button>
-        `;
-    }
-
-    else if (option === "followCharm") {
-        story.innerHTML =
-            "The charm leads you to a glowing lake. Your reflection smiles and says, “You are loved more than you know.”";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('end')">Smile back 😊</button>
-        `;
-    }
-
-    else if (option === "continueForest") {
-        story.innerHTML =
-            "You and the cat walk together. Fireflies light your path. One lands on your hand and forms a tiny heart.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('end')">Make a wish 💖</button>
-        `;
-    }
-
-    else if (option === "rideCloud") {
-        story.innerHTML =
-            "The cloud lifts you gently. From above, you see stars forming your name. One star falls into your hand — warm and soft.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('end')">Keep the star ⭐</button>
-        `;
-    }
-
-    else if (option === "flowerPath") {
-        story.innerHTML =
-            "The flower path leads you to a cozy little cottage with heart-shaped windows. Inside, a warm light welcomes you.";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="choose('end')">Enter the cottage 🏡💗</button>
-        `;
-    }
-
-    else if (option === "end") {
-        story.innerHTML =
-            "The world glows brighter around you. A gentle voice whispers: “You are cherished, appreciated, and deeply loved.” 💖<br><br>Thank you for playing, beautiful soul 🌸";
-
-        choices.innerHTML = `
-            <button class="choice-btn" onclick="location.href='/'">Return Home 🏠</button>
-        `;
+function loadGame() {
+    let saved = localStorage.getItem("shahad_story_progress");
+    if (saved) {
+        currentStep = saved;
+        playStep(currentStep);
+    } else {
+        startStory();
     }
 }
-</script>
 
-</body>
-</html>
+function restartGame() {
+    if (confirm("Restart the story?")) {
+        localStorage.removeItem("shahad_story_progress");
+        startStory();
+    }
+}
+
+// -------------------------------
+// STORY ENGINE
+// -------------------------------
+
+let currentStep = "start";
+
+function transitionStory(title, text, buttonsHtml) {
+    const box = document.getElementById("storyBox");
+    box.style.opacity = "0";
+
+    setTimeout(() => {
+        document.getElementById("titleText").innerHTML = title;
+        document.getElementById("storyText").innerHTML = text;
+        document.getElementById("choices").innerHTML = buttonsHtml;
+        box.style.opacity = "1";
+    }, 400);
+}
+
+function playStep(step) {
+    currentStep = step;
+
+    // Save automatically after every step (optional)
+    localStorage.setItem("shahad_story_progress", currentStep);
+
+    switch(step) {
+
+        // -------------------------------
+        // CHAPTER 1
+        // -------------------------------
+
+        case "start":
+            transitionStory(
+                "Chapter 1 — The Pink Envelope ✉️",
+                `Shahad discovers a soft pink envelope on her pillow, glowing gently...`,
+                `
+                <button class='btn' onclick="playStep('open')">Open it 💌</button>
+                <button class='btn' onclick="playStep('hold')">Hold it close 💗</button>
+                <button class='btn' onclick="playStep('inspect')">Inspect it 👀</button>
+                `
+            );
+            break;
+
+        // -------------------------------
+        // CHAPTER 2
+        // -------------------------------
+
+        case "open":
+            transitionStory(
+                "Chapter 2 — The Message Glows ✨",
+                `Inside is a shimmering card: "Follow your heart. It knows the way."`,
+                `
+                <button class='btn' onclick="playStep('lightPath')">Follow the glowing light ✨</button>
+                <button class='btn' onclick="playStep('think')">Sit and think 🧸</button>
+                `
+            );
+            break;
+
+        case "hold":
+            transitionStory(
+                "Chapter 2 — Warmth in Her Hands 💞",
+                `The envelope warms in her hands… soft, comforting, full of love.`,
+                `
+                <button class='btn' onclick="playStep('slowOpen')">Open it slowly ✉️</button>
+                <button class='btn' onclick="playStep('warmthGuide')">Follow the warmth 💗</button>
+                `
+            );
+            break;
+
+        case "inspect":
+            transitionStory(
+                "Chapter 2 — Hidden Runes 🔮",
+                `Tiny runes glow along the envelope’s edge. They shift softly.`,
+                `
+                <button class='btn' onclick="playStep('decipher')">Try to read them 🔮</button>
+                <button class='btn' onclick="playStep('open')">Open it ✉️</button>
+                `
+            );
+            break;
+
+        // -------------------------------
+        // CHAPTER 3
+        // -------------------------------
+
+        case "lightPath":
+            transitionStory(
+                "Chapter 3 — Path of Light 🌙",
+                `A trail of soft pink light appears, leading outside.`,
+                `<button class='btn' onclick="playStep('gate')">Follow the path 🌸</button>`
+            );
+            break;
+
+        case "think":
+            transitionStory(
+                "Chapter 3 — A Soft Thought 💭",
+                `She pauses… wondering who sent this gift.`,
+                `<button class='btn' onclick="playStep('lightPath')">Follow the light ✨</button>`
+            );
+            break;
+
+        case "slowOpen":
+            transitionStory(
+                "Chapter 3 — Petal of Magic 🌺",
+                `Inside is a glowing pink petal drifting upward...`,
+                `<button class='btn' onclick="playStep('petalFollow')">Follow the petal 🌬️</button>`
+            );
+            break;
+
+        case "warmthGuide":
+            transitionStory(
+                "Chapter 3 — Firefly Road ✨",
+                `Fireflies gather… forming a heart-shaped path.`,
+                `<button class='btn' onclick="playStep('firefly')">Walk the path 💗</button>`
+            );
+            break;
+
+        case "decipher":
+            transitionStory(
+                "Chapter 3 — Runes of Love 💫",
+                `The runes whisper: “You are loved more than you know, Shahad.”`,
+                `<button class='btn' onclick="playStep('open')">Open it ✉️</button>`
+            );
+            break;
+
+        // -------------------------------
+        // CHAPTER 4 (Final Choices)
+        // -------------------------------
+
+        case "gate":
+            transitionStory(
+                "Chapter 4 — Gate of Blossoms 🌸",
+                `A giant pink blossom gate opens… inviting her inside.`,
+                `<button class='btn' onclick="playStep('ending1')">Walk through 🌸</button>`
+            );
+            break;
+
+        case "petalFollow":
+            transitionStory(
+                "Chapter 4 — Heart Clearing 💗",
+                `The petal guides her to a clearing shaped like a heart.`,
+                `<button class='btn' onclick="playStep('ending2')">Step inside 💞</button>`
+            );
+            break;
+
+        case "firefly":
+            transitionStory(
+                "Chapter 4 — Lanterns of Love ✨",
+                `Fireflies swirl into a glowing doorway of light.`,
+                `<button class='btn' onclick="playStep('ending3')">Enter the light ✨</button>`
+            );
+            break;
+
+        // -------------------------------
+        // ENDINGS
+        // -------------------------------
+
+        case "ending1":
+            transitionStory(
+                "Ending — Blossoms of Love 🌸",
+                `As she steps through, blossoms fall gently around her.  
+                 A soft voice whispers:  
+                 <br><br>“You are cherished more than words can hold, Shahad.”`,
+                `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
+            );
+            break;
+
+        case "ending2":
+            transitionStory(
+                "Ending — Heart’s Home 💗",
+                `The clearing glows… warm, bright, safe.  
+                 She feels deeply loved, held by a gentle presence.`,
+                `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
+            );
+            break;
+
+        case "ending3":
+            transitionStory(
+                "Ending — Light of Love ✨",
+                `The light wraps around her like a warm hug.  
+                 She smiles softly, knowing she is never alone.`,
+                `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
+            );
+            break;
+    }
+}
+
+// -------------------------------
+// ON PAGE LOAD
+// -------------------------------
+window.onload = loadGame;
+
+</script>
+{% endblock %}
