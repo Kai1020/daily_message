@@ -9,8 +9,8 @@ app = Flask(__name__)
 # ==============================
 # EMAIL CONFIGURATION
 # ==============================
-YOUR_EMAIL = "yourgmail@gmail.com"        # <--- change this to your Gmail
-APP_PASSWORD = "your_app_password_here"   # <--- NEW Gmail App Password (no spaces)
+YOUR_EMAIL = "kai2672004@gmail.com"        # <--- change this to your Gmail
+APP_PASSWORD = "nssxpgyxcoburumh"   # <--- NEW Gmail App Password (no spaces)
 # ==============================
 
 # Daily messages
@@ -101,3 +101,4 @@ def meter_update():
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", debug=True)
+
