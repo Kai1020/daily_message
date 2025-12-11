@@ -3,13 +3,15 @@
 
 {% block content %}
 
-<div class="card" id="storyBox" style="transition: .5s;">
-    <h2 id="titleText"></h2>
-    <p id="storyText"></p>
+<div class="card" id="storyBox" style="transition:opacity .4s, transform .4s;">
+    <h2 id="titleText" style="margin-top:0;"></h2>
+    <p id="storyText" style="line-height:1.6; font-size:17px;"></p>
 
-    <div id="choices" style="margin-top:16px; display:flex; flex-direction:column; gap:10px;"></div>
+    <div id="choices"
+         style="margin-top:20px; display:flex; flex-direction:column; gap:12px;">
+    </div>
 
-    <div style="margin-top:20px; display:flex; gap:10px;">
+    <div style="margin-top:25px; display:flex; gap:12px; flex-wrap:wrap;">
         <button class="btn" onclick="saveGame()">Save Game 💾</button>
         <button class="btn" onclick="restartGame()">Restart 🔄</button>
     </div>
@@ -20,17 +22,18 @@
 {% block scripts %}
 <script>
 
-// -------------------------------
+// ------------------------------------
 // SAVE / LOAD SYSTEM
-// -------------------------------
+// ------------------------------------
 
 function saveGame() {
     localStorage.setItem("shahad_story_progress", currentStep);
-    alert("Game Saved! 💗");
+    alert("Saved! Your progress is safe 💗");
 }
 
 function loadGame() {
-    let saved = localStorage.getItem("shahad_story_progress");
+    const saved = localStorage.getItem("shahad_story_progress");
+
     if (saved) {
         currentStep = saved;
         playStep(currentStep);
@@ -40,65 +43,84 @@ function loadGame() {
 }
 
 function restartGame() {
-    if (confirm("Restart the story?")) {
+    if (confirm("Start over from the beginning?")) {
         localStorage.removeItem("shahad_story_progress");
         startStory();
     }
 }
 
-// -------------------------------
+// ------------------------------------
 // STORY ENGINE
-// -------------------------------
+// ------------------------------------
 
 let currentStep = "start";
 
+function fadeCardOut() {
+    const card = document.getElementById("storyBox");
+    card.style.opacity = "0";
+    card.style.transform = "translateY(10px)";
+}
+
+function fadeCardIn() {
+    const card = document.getElementById("storyBox");
+    card.style.opacity = "1";
+    card.style.transform = "translateY(0px)";
+}
+
 function transitionStory(title, text, buttonsHtml) {
-    const box = document.getElementById("storyBox");
-    box.style.opacity = "0";
+    fadeCardOut();
 
     setTimeout(() => {
         document.getElementById("titleText").innerHTML = title;
         document.getElementById("storyText").innerHTML = text;
         document.getElementById("choices").innerHTML = buttonsHtml;
-        box.style.opacity = "1";
-    }, 400);
+        fadeCardIn();
+    }, 350);
+}
+
+// ------------------------------------
+// STORY PATH
+// ------------------------------------
+
+function startStory() {
+    playStep("start");
 }
 
 function playStep(step) {
     currentStep = step;
-
-    // Save automatically after every step (optional)
-    localStorage.setItem("shahad_story_progress", currentStep);
+    localStorage.setItem("shahad_story_progress", currentStep); // auto-save
 
     switch(step) {
 
-        // -------------------------------
+        // ---------------------------
         // CHAPTER 1
-        // -------------------------------
+        // ---------------------------
 
         case "start":
             transitionStory(
                 "Chapter 1 — The Pink Envelope ✉️",
-                `Shahad discovers a soft pink envelope on her pillow, glowing gently...`,
+                `Shahad finds a soft pink envelope resting on her pillow…  
+                 It glows faintly, as if it’s waiting for her fingers.`,
                 `
-                <button class='btn' onclick="playStep('open')">Open it 💌</button>
-                <button class='btn' onclick="playStep('hold')">Hold it close 💗</button>
-                <button class='btn' onclick="playStep('inspect')">Inspect it 👀</button>
+                    <button class='btn' onclick="playStep('open')">Open it 💌</button>
+                    <button class='btn' onclick="playStep('hold')">Hold it close 💗</button>
+                    <button class='btn' onclick="playStep('inspect')">Inspect it 👀</button>
                 `
             );
             break;
 
-        // -------------------------------
+        // ---------------------------
         // CHAPTER 2
-        // -------------------------------
+        // ---------------------------
 
         case "open":
             transitionStory(
                 "Chapter 2 — The Message Glows ✨",
-                `Inside is a shimmering card: "Follow your heart. It knows the way."`,
+                `"Follow your heart," the card whispers softly.  
+                 A warm light spreads across the room.`,
                 `
-                <button class='btn' onclick="playStep('lightPath')">Follow the glowing light ✨</button>
-                <button class='btn' onclick="playStep('think')">Sit and think 🧸</button>
+                    <button class='btn' onclick="playStep('lightPath')">Follow the light ✨</button>
+                    <button class='btn' onclick="playStep('think')">Pause and think 🧸</button>
                 `
             );
             break;
@@ -106,49 +128,52 @@ function playStep(step) {
         case "hold":
             transitionStory(
                 "Chapter 2 — Warmth in Her Hands 💞",
-                `The envelope warms in her hands… soft, comforting, full of love.`,
+                `The envelope warms as she holds it… a gentle, loving warmth  
+                 like someone thinking of her.`,
                 `
-                <button class='btn' onclick="playStep('slowOpen')">Open it slowly ✉️</button>
-                <button class='btn' onclick="playStep('warmthGuide')">Follow the warmth 💗</button>
+                    <button class='btn' onclick="playStep('slowOpen')">Open it slowly ✉️</button>
+                    <button class='btn' onclick="playStep('warmthGuide')">Follow the warmth 💗</button>
                 `
             );
             break;
 
         case "inspect":
             transitionStory(
-                "Chapter 2 — Hidden Runes 🔮",
-                `Tiny runes glow along the envelope’s edge. They shift softly.`,
+                "Chapter 2 — Runes of Soft Light 🔮",
+                `Tiny glowing runes shift around the edges… whispering softly.`,
                 `
-                <button class='btn' onclick="playStep('decipher')">Try to read them 🔮</button>
-                <button class='btn' onclick="playStep('open')">Open it ✉️</button>
+                    <button class='btn' onclick="playStep('decipher')">Try to read them 🔮</button>
+                    <button class='btn' onclick="playStep('open')">Open it ✉️</button>
                 `
             );
             break;
 
-        // -------------------------------
+        // ---------------------------
         // CHAPTER 3
-        // -------------------------------
+        // ---------------------------
 
         case "lightPath":
             transitionStory(
-                "Chapter 3 — Path of Light 🌙",
-                `A trail of soft pink light appears, leading outside.`,
+                "Chapter 3 — A Path of Light 🌙",
+                `A trail of soft pink light appears… shimmering, inviting.`,
                 `<button class='btn' onclick="playStep('gate')">Follow the path 🌸</button>`
             );
             break;
 
         case "think":
             transitionStory(
-                "Chapter 3 — A Soft Thought 💭",
-                `She pauses… wondering who sent this gift.`,
+                "Chapter 3 — A Quiet Thought 💭",
+                `She wonders who sent this.  
+                 The warmth in her chest feels familiar…`,
                 `<button class='btn' onclick="playStep('lightPath')">Follow the light ✨</button>`
             );
             break;
 
         case "slowOpen":
             transitionStory(
-                "Chapter 3 — Petal of Magic 🌺",
-                `Inside is a glowing pink petal drifting upward...`,
+                "Chapter 3 — A Floating Petal 🌺",
+                `A single glowing pink petal drifts upward,  
+                 calling her softly.`,
                 `<button class='btn' onclick="playStep('petalFollow')">Follow the petal 🌬️</button>`
             );
             break;
@@ -156,7 +181,8 @@ function playStep(step) {
         case "warmthGuide":
             transitionStory(
                 "Chapter 3 — Firefly Road ✨",
-                `Fireflies gather… forming a heart-shaped path.`,
+                `Fireflies gather around her…  
+                 forming a glowing heart-shaped path.`,
                 `<button class='btn' onclick="playStep('firefly')">Walk the path 💗</button>`
             );
             break;
@@ -164,49 +190,52 @@ function playStep(step) {
         case "decipher":
             transitionStory(
                 "Chapter 3 — Runes of Love 💫",
-                `The runes whisper: “You are loved more than you know, Shahad.”`,
+                `The runes whisper gently:  
+                 “You are loved more than you know, Shahad.”`,
                 `<button class='btn' onclick="playStep('open')">Open it ✉️</button>`
             );
             break;
 
-        // -------------------------------
-        // CHAPTER 4 (Final Choices)
-        // -------------------------------
+        // ---------------------------
+        // CHAPTER 4 — FINAL STEPS
+        // ---------------------------
 
         case "gate":
             transitionStory(
-                "Chapter 4 — Gate of Blossoms 🌸",
-                `A giant pink blossom gate opens… inviting her inside.`,
-                `<button class='btn' onclick="playStep('ending1')">Walk through 🌸</button>`
+                "Chapter 4 — The Blossom Gate 🌸",
+                `A grand gate made of petals blooms open before her…`,
+                `<button class='btn' onclick="playStep('ending1')">Step inside 🌸</button>`
             );
             break;
 
         case "petalFollow":
             transitionStory(
                 "Chapter 4 — Heart Clearing 💗",
-                `The petal guides her to a clearing shaped like a heart.`,
-                `<button class='btn' onclick="playStep('ending2')">Step inside 💞</button>`
+                `The glowing petal leads her into  
+                 a clearing shaped like a perfect heart.`,
+                `<button class='btn' onclick="playStep('ending2')">Enter the heart 💞</button>`
             );
             break;
 
         case "firefly":
             transitionStory(
                 "Chapter 4 — Lanterns of Love ✨",
-                `Fireflies swirl into a glowing doorway of light.`,
-                `<button class='btn' onclick="playStep('ending3')">Enter the light ✨</button>`
+                `Fireflies swirl together,  
+                 forming a doorway of warm, soft light.`,
+                `<button class='btn' onclick="playStep('ending3')">Walk through ✨</button>`
             );
             break;
 
-        // -------------------------------
+        // ---------------------------
         // ENDINGS
-        // -------------------------------
+        // ---------------------------
 
         case "ending1":
             transitionStory(
                 "Ending — Blossoms of Love 🌸",
-                `As she steps through, blossoms fall gently around her.  
-                 A soft voice whispers:  
-                 <br><br>“You are cherished more than words can hold, Shahad.”`,
+                `Soft petals drift around her like a gentle storm of affection.  
+                 A quiet voice whispers:  
+                 <br><br><i>“You are cherished more than words can hold, Shahad.”</i>`,
                 `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
             );
             break;
@@ -214,8 +243,8 @@ function playStep(step) {
         case "ending2":
             transitionStory(
                 "Ending — Heart’s Home 💗",
-                `The clearing glows… warm, bright, safe.  
-                 She feels deeply loved, held by a gentle presence.`,
+                `The clearing glows softly… warm, safe, familiar.  
+                 She feels wrapped in gentle, unwavering love.`,
                 `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
             );
             break;
@@ -223,17 +252,18 @@ function playStep(step) {
         case "ending3":
             transitionStory(
                 "Ending — Light of Love ✨",
-                `The light wraps around her like a warm hug.  
-                 She smiles softly, knowing she is never alone.`,
+                `The light surrounds her like a warm embrace.  
+                 She smiles, realizing she was never walking alone.`,
                 `<button class='btn' onclick="restartGame()">Play Again 🔄</button>`
             );
             break;
     }
 }
 
-// -------------------------------
+// ------------------------------------
 // ON PAGE LOAD
-// -------------------------------
+// ------------------------------------
+
 window.onload = loadGame;
 
 </script>
