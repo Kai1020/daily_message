@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="card">
+  <h2>Love Meter 💗</h2>
+
+  <input type="range" id="slider" min="0" max="100" value="50" style="width:100%;">
+  <p id="label" style="margin-top:10px;font-weight:700;">50% • Feeling warm</p>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+const s = document.getElementById("slider");
+const l = document.getElementById("label");
+
+function mood(v){
+  if(v<20)return"Missing you";
+  if(v<40)return"Need a hug";
+  if(v<60)return"Feeling warm";
+  if(v<80)return"Loved";
+  return"Overflowing love";
+}
+
+let timeout=null;
+s.oninput=()=>{
+  let v=s.value;
+  l.textContent = `${v}% • ${mood(v)}`;
+  if(timeout)clearTimeout(timeout);
+  timeout=setTimeout(()=>{
+    fetch("/meter_update",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({value:v,mood:mood(v)})
+    });
+  },400);
+};
+</script>
+{% endblock %}
