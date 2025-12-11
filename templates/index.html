@@ -111,7 +111,7 @@
     <!-- SECTION 4: Write a message back -->
     <div class="card">
       <h1>Write a message back to me 💌</h1>
-      <p>Whatever you write here will be saved privately on the server.</p>
+      <p>Whatever you write here will be saved privately.</p>
 
       <form action="/submit_message" method="POST" style="margin-top:15px;">
         <input 
@@ -151,7 +151,7 @@
 
 
 
-<!-- ⭐ ALL JAVASCRIPT BELOW ⭐ -->
+<!-- ⭐ JAVASCRIPT ⭐ -->
 <script>
   // Reveal button
   const revealBtn = document.getElementById("revealBtn");
@@ -198,7 +198,7 @@
   });
 
 
-  // Love meter logic
+  // Love meter logic + SEND TO SERVER
   const slider = document.getElementById("loveSlider");
   const loveText = document.getElementById("loveText");
 
@@ -212,6 +212,13 @@
     else if (val < 80) mood = "😊 Loved";
 
     loveText.textContent = `${val}% • ${mood}`;
+
+    // Send update to backend
+    fetch("/meter_update", {
+      method: "POST",
+      headers: { "Content-Type": "application/x-www-form-urlencoded" },
+      body: `value=${val}&mood=${encodeURIComponent(mood)}`
+    });
   });
 </script>
 
