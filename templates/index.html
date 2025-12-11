@@ -20,18 +20,22 @@
   }
 
   .card {
-    background: rgba(255,255,255,0.8);
-    padding: 20px;
+    background: rgba(255,255,255,0.85);
+    padding: 25px;
     border-radius: 18px;
-    box-shadow: 0 5px 18px rgba(193,75,99,0.15);
-    margin-top: 30px;
+    box-shadow: 0 5px 18px rgba(193,75,99,0.2);
+    margin-top: 35px;
     text-align: center;
   }
 
   h1 {
-    margin: 0;
+    margin: 0 0 10px 0;
     color: #c14b63;
-    font-size: 20px;
+    font-size: 22px;
+  }
+
+  button {
+    cursor: pointer;
   }
 </style>
 </head>
@@ -51,7 +55,6 @@
           padding:12px 16px;
           font-weight:600;
           border-radius:999px;
-          cursor:pointer;
         ">
         Reveal ❤️
       </button>
@@ -60,43 +63,9 @@
         {{ message }}
       </div>
     </div>
-<script>
-  // Reveal button logic
-  const revealBtn = document.getElementById("revealBtn");
-  const dailyMessage = document.getElementById("dailyMessage");
 
-  revealBtn.addEventListener("click", () => {
-    dailyMessage.style.display = "block";
-    revealBtn.style.display = "none";
-  });
 
-  // Floating hearts on tap/click
-  document.addEventListener("click", function(e) {
-    // Create a heart element
-    let heart = document.createElement("div");
-    heart.textContent = "❤️";
-    heart.style.position = "fixed";
-    heart.style.left = e.clientX + "px";
-    heart.style.top = e.clientY + "px";
-    heart.style.fontSize = "20px";
-    heart.style.opacity = 1;
-    heart.style.transition = "all 1.4s ease-out";
-
-    document.body.appendChild(heart);
-
-    // Animate upward and fade
-    setTimeout(() => {
-      heart.style.top = (e.clientY - 80) + "px";
-      heart.style.opacity = 0;
-    }, 10);
-
-    // Remove after animation
-    setTimeout(() => {
-      heart.remove();
-    }, 1500);
-  });
-</script>
-    <!-- SECTION 2: Pick-a-card game -->
+    <!-- SECTION 2: Pick-a-card -->
     <div class="card">
       <h1>Pick a card 💌</h1>
       <p>One of these cards hides a sweet message.</p>
@@ -123,16 +92,8 @@
 
       <div id="cardOutput" style="margin-top:15px; font-weight:bold;"></div>
     </div>
-// Pick-a-card logic
-const cards = document.querySelectorAll(".pickCard");
-const cardOutput = document.getElementById("cardOutput");
 
-cards.forEach(card => {
-  card.addEventListener("click", () => {
-    const msg = card.getAttribute("data-msg");
-    cardOutput.textContent = msg;
-  });
-});
+
     <!-- SECTION 3: Love Meter -->
     <div class="card">
       <h1>Love Meter 💖</h1>
@@ -142,47 +103,33 @@ cards.forEach(card => {
         style="width:80%; margin-top:15px;">
 
       <div id="loveText" style="margin-top:10px; font-size:18px; font-weight:bold;">
-        70% • I feel loved 😌
+        70% • I feel loved 😊
       </div>
     </div>
-// Love Meter logic
-const slider = document.getElementById("loveSlider");
-const loveText = document.getElementById("loveText");
 
-slider.addEventListener("input", () => {
-  const val = slider.value;
 
-  let mood = "😍 Overflowing love";
-  if (val < 20) mood = "😢 Missing you";
-  else if (val < 40) mood = "🥺 I need a hug";
-  else if (val < 60) mood = "☺️ Feeling warm";
-  else if (val < 80) mood = "😊 Loved";
-  else mood = "😍 Overflowing love";
-
-  loveText.textContent = `${val}% • ${mood}`;
-});
-    <!-- SECTION 4: Write a message back to me -->
+    <!-- SECTION 4: Write a message back -->
     <div class="card">
       <h1>Write a message back to me 💌</h1>
       <p>Whatever you write here will be saved privately on the server.</p>
 
       <form action="/submit_message" method="POST" style="margin-top:15px;">
-        <input
-          type="text"
-          name="name"
-          placeholder="Your name (optional)"
+        <input 
+          type="text" 
+          name="name" 
+          placeholder="Your name (optional)" 
           style="width:90%; padding:10px; border-radius:10px; border:1px solid #d8b3b3;"
         >
 
-        <textarea
-          name="text"
+        <textarea 
+          name="text" 
           rows="3"
           placeholder="Write something sweet..."
           required
           style="width:90%; padding:10px; border-radius:10px; border:1px solid #d8b3b3; margin-top:10px;"
         ></textarea>
 
-        <button
+        <button 
           type="submit"
           style="
             background:#c14b63;
@@ -195,10 +142,78 @@ slider.addEventListener("input", () => {
             margin-top:10px;
           "
         >
-          Send ❤️
+          Send 💖
         </button>
       </form>
     </div>
-  </div> <!-- wrap -->
+
+  </div>
+
+
+
+<!-- ⭐ ALL JAVASCRIPT BELOW ⭐ -->
+<script>
+  // Reveal button
+  const revealBtn = document.getElementById("revealBtn");
+  const dailyMessage = document.getElementById("dailyMessage");
+
+  revealBtn.addEventListener("click", () => {
+    dailyMessage.style.display = "block";
+    revealBtn.style.display = "none";
+  });
+
+
+  // Floating hearts on tap
+  document.addEventListener("click", function(e) {
+    if (e.target.tagName === "BUTTON" || e.target.classList.contains("pickCard")) return;
+
+    let heart = document.createElement("div");
+    heart.textContent = "❤️";
+    heart.style.position = "fixed";
+    heart.style.left = e.clientX + "px";
+    heart.style.top = e.clientY + "px";
+    heart.style.fontSize = "20px";
+    heart.style.opacity = 1;
+    heart.style.transition = "all 1.4s ease-out";
+    document.body.appendChild(heart);
+
+    setTimeout(() => {
+      heart.style.top = (e.clientY - 80) + "px";
+      heart.style.opacity = 0;
+    }, 10);
+
+    setTimeout(() => heart.remove(), 1500);
+  });
+
+
+  // Pick-a-card logic
+  const cards = document.querySelectorAll(".pickCard");
+  const cardOutput = document.getElementById("cardOutput");
+
+  cards.forEach(card => {
+    card.addEventListener("click", () => {
+      const msg = card.getAttribute("data-msg");
+      cardOutput.textContent = msg;
+    });
+  });
+
+
+  // Love meter logic
+  const slider = document.getElementById("loveSlider");
+  const loveText = document.getElementById("loveText");
+
+  slider.addEventListener("input", () => {
+    const val = slider.value;
+
+    let mood = "😍 Overflowing love";
+    if (val < 20) mood = "😢 Missing you";
+    else if (val < 40) mood = "🤗 I need a hug";
+    else if (val < 60) mood = "☺️ Feeling warm";
+    else if (val < 80) mood = "😊 Loved";
+
+    loveText.textContent = `${val}% • ${mood}`;
+  });
+</script>
+
 </body>
 </html>
