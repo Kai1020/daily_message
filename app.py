@@ -7,12 +7,13 @@ import os
 app = Flask(__name__)
 
 # ==============================
-# CONFIGURE YOUR EMAIL HERE
+# EMAIL CONFIGURATION
 # ==============================
-YOUR_EMAIL = "yourgmail@gmail.com"   # <-- change to YOUR Gmail
-APP_PASSWORD = "your_app_password"   # <-- paste your NEW Gmail App Password (no spaces)
+YOUR_EMAIL = "yourgmail@gmail.com"        # <--- change this to your Gmail
+APP_PASSWORD = "your_app_password_here"   # <--- NEW Gmail App Password (no spaces)
 # ==============================
 
+# Daily messages
 messages = [
     "You make the ordinary feel magical.",
     "Every day with you becomes my favourite day.",
@@ -24,6 +25,7 @@ messages = [
 ]
 
 STORAGE = "sent_messages.txt"
+METER_LOG = "meter_log.txt"
 
 
 @app.route("/")
@@ -33,17 +35,21 @@ def home():
     return render_template("index.html", message=daily_message)
 
 
+# ======================================================
+# Handle messages she writes to you
+# ======================================================
 @app.route("/submit_message", methods=["POST"])
 def submit_message():
     name = request.form.get("name", "Anonymous").strip()
     text = request.form.get("text", "").strip()
 
     if text:
+        # Save message in file
         entry = f"{date.today().isoformat()} | {name} | {text}\n"
         with open(STORAGE, "a", encoding="utf-8") as f:
             f.write(entry)
 
-        # Send email notification
+        # Email you
         try:
             body = f"New message from your website:\n\nFrom: {name}\nMessage:\n{text}"
             msg = MIMEText(body)
@@ -51,14 +57,46 @@ def submit_message():
             msg["From"] = YOUR_EMAIL
             msg["To"] = YOUR_EMAIL
 
-            server = smtplpt.SMTP_SSL("smtp.gmail.com", 465)
+            server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
             server.login(YOUR_EMAIL, APP_PASSWORD)
             server.sendmail(YOUR_EMAIL, YOUR_EMAIL, msg.as_string())
             server.quit()
+
         except Exception as e:
             print("EMAIL ERROR:", e)
 
     return redirect(url_for("home"))
+
+
+# ======================================================
+# Handle Love Meter updates (save + email)
+# ======================================================
+@app.route("/meter_update", methods=["POST"])
+def meter_update():
+    value = request.form.get("value")
+    mood = request.form.get("mood")
+
+    # Save to log file
+    with open(METER_LOG, "a", encoding="utf-8") as f:
+        f.write(f"{date.today().isoformat()} | {value}% | {mood}\n")
+
+    # Email you
+    try:
+        body = f"Love Meter Update ❤️\n\nShe slid it to: {value}%\nMood: {mood}"
+        msg = MIMEText(body)
+        msg["Subject"] = "Love Meter Mood Update ❤️"
+        msg["From"] = YOUR_EMAIL
+        msg["To"] = YOUR_EMAIL
+
+        server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        server.login(YOUR_EMAIL, APP_PASSWORD)
+        server.sendmail(YOUR_EMAIL, YOUR_EMAIL, msg.as_string())
+        server.quit()
+
+    except Exception as e:
+        print("EMAIL ERROR:", e)
+
+    return "OK"
 
 
 if __name__ == "__main__":
