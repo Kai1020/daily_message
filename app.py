@@ -1,19 +1,19 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request
 from datetime import date
 import smtplib
-from email.mime.text import MIMEText
-import os
 
 app = Flask(__name__)
 
-# ==============================
-# EMAIL CONFIGURATION
-# ==============================
-YOUR_EMAIL = "kai2672004@gmail.com"        # <--- change this to your Gmail
-APP_PASSWORD = "nssxpgyxcoburumh"   # <--- NEW Gmail App Password (no spaces)
-# ==============================
+# ---------------------------------------------------------------------
+# EMAIL SETTINGS (REPLACE THESE)
+# ---------------------------------------------------------------------
+YOUR_EMAIL = "kai2672004@gmail.com"      # keep quotes
+APP_PASSWORD = "nssxpgyxcobu"      # keep quotes
 
-# Daily messages
+
+# ---------------------------------------------------------------------
+# DAILY MESSAGES
+# ---------------------------------------------------------------------
 messages = [
     "You make the ordinary feel magical.",
     "Every day with you becomes my favourite day.",
@@ -24,81 +24,69 @@ messages = [
     "You are a blessing I don’t take for granted."
 ]
 
-STORAGE = "sent_messages.txt"
-METER_LOG = "meter_log.txt"
 
-
+# ---------------------------------------------------------------------
+# HOME PAGE (DAILY MESSAGE)
+# ---------------------------------------------------------------------
 @app.route("/")
 def home():
     day = date.today().toordinal()
-    daily_message = messages[day % len(messages)]
-    return render_template("index.html", message=daily_message)
+    message = messages[day % len(messages)]
+    return render_template("index.html", message=message)
 
 
-# ======================================================
-# Handle messages she writes to you
-# ======================================================
+# ---------------------------------------------------------------------
+# GAME PAGE
+# ---------------------------------------------------------------------
+@app.route("/game")
+def game():
+    return render_template("game.html")
+
+
+# ---------------------------------------------------------------------
+# RECEIVE A MESSAGE (SEND TO YOUR EMAIL)
+# ---------------------------------------------------------------------
 @app.route("/submit_message", methods=["POST"])
 def submit_message():
-    name = request.form.get("name", "Anonymous").strip()
-    text = request.form.get("text", "").strip()
+    name = request.form.get("name", "Someone")
+    msg = request.form.get("message", "")
 
-    if text:
-        # Save message in file
-        entry = f"{date.today().isoformat()} | {name} | {text}\n"
-        with open(STORAGE, "a", encoding="utf-8") as f:
-            f.write(entry)
+    full_message = f"Message from {name}:\n\n{msg}"
 
-        # Email you
-        try:
-            body = f"New message from your website:\n\nFrom: {name}\nMessage:\n{text}"
-            msg = MIMEText(body)
-            msg["Subject"] = "New Love Message ❤️"
-            msg["From"] = YOUR_EMAIL
-            msg["To"] = YOUR_EMAIL
+    try:
+        server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
+        server.login(YOUR_EMAIL, APP_PASSWORD)
+        server.sendmail(YOUR_EMAIL, YOUR_EMAIL, full_message)
+        server.quit()
+    except Exception as e:
+        print("EMAIL ERROR:", e)
 
-            server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
-            server.login(YOUR_EMAIL, APP_PASSWORD)
-            server.sendmail(YOUR_EMAIL, YOUR_EMAIL, msg.as_string())
-            server.quit()
-
-        except Exception as e:
-            print("EMAIL ERROR:", e)
-
-    return redirect(url_for("home"))
+    return "Message sent successfully 💖"
 
 
-# ======================================================
-# Handle Love Meter updates (save + email)
-# ======================================================
+# ---------------------------------------------------------------------
+# LOVE METER MOOD UPDATE
+# ---------------------------------------------------------------------
 @app.route("/meter_update", methods=["POST"])
 def meter_update():
     value = request.form.get("value")
     mood = request.form.get("mood")
 
-    # Save to log file
-    with open(METER_LOG, "a", encoding="utf-8") as f:
-        f.write(f"{date.today().isoformat()} | {value}% | {mood}\n")
+    mood_message = f"Love Meter Update:\nValue: {value}%\nMood: {mood}\n"
 
-    # Email you
     try:
-        body = f"Love Meter Update ❤️\n\nShe slid it to: {value}%\nMood: {mood}"
-        msg = MIMEText(body)
-        msg["Subject"] = "Love Meter Mood Update ❤️"
-        msg["From"] = YOUR_EMAIL
-        msg["To"] = YOUR_EMAIL
-
         server = smtplib.SMTP_SSL("smtp.gmail.com", 465)
         server.login(YOUR_EMAIL, APP_PASSWORD)
-        server.sendmail(YOUR_EMAIL, YOUR_EMAIL, msg.as_string())
+        server.sendmail(YOUR_EMAIL, YOUR_EMAIL, mood_message)
         server.quit()
-
     except Exception as e:
         print("EMAIL ERROR:", e)
 
     return "OK"
 
 
+# ---------------------------------------------------------------------
+# RUN
+# ---------------------------------------------------------------------
 if __name__ == "__main__":
-    app.run(host="0.0.0.0", debug=True)
-
+    app.run(host="0.0.0.0", port=10000)
